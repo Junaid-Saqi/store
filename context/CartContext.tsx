@@ -3,6 +3,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Product } from "@/lib/mock-data";
+import { useToast } from "@/context/ToastContext";
 
 interface CartItem extends Product {
     quantity: number;
@@ -22,10 +23,11 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
     const [cart, setCart] = useState<CartItem[]>([]);
+    const { showToast } = useToast();
 
     // Load cart from localStorage on mount
     useEffect(() => {
-        const savedCart = localStorage.getItem("electro-cart");
+        const savedCart = localStorage.getItem("volt-cart");
         if (savedCart) {
             try {
                 setCart(JSON.parse(savedCart));
@@ -37,7 +39,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     // Save cart to localStorage on change
     useEffect(() => {
-        localStorage.setItem("electro-cart", JSON.stringify(cart));
+        localStorage.setItem("volt-cart", JSON.stringify(cart));
     }, [cart]);
 
     const addToCart = (product: Product) => {
@@ -50,6 +52,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             }
             return [...prev, { ...product, quantity: 1 }];
         });
+        showToast(`${product.name} added to your cart!`, "success");
     };
 
     const removeFromCart = (productId: string) => {
