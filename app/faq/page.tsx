@@ -32,7 +32,7 @@ const FAQS = [
             },
             {
                 q: "Do you ship internationally?",
-                a: "Currently, ElectroWave operates exclusively within our primary markets to ensure the integrity of our 'Pay on Delivery' network. Stay tuned for global expansion soon."
+                a: "Currently, VOLT operates exclusively within our primary markets to ensure the integrity of our 'Pay on Delivery' network. Stay tuned for global expansion soon."
             }
         ]
     },
@@ -45,7 +45,7 @@ const FAQS = [
             },
             {
                 q: "Is there a warranty on my tech?",
-                a: "Absolutely. All our products come with a minimum 1-year brand warranty, plus an exclusive 7-day no-questions-asked replacement policy from ElectroWave."
+                a: "Absolutely. All our products come with a minimum 1-year brand warranty, plus an exclusive 7-day no-questions-asked replacement policy from VOLT."
             }
         ]
     }
@@ -79,8 +79,8 @@ export default function FAQPage() {
                                     setOpenIndex(null);
                                 }}
                                 className={`w-full text-left px-8 py-5 rounded-2xl font-black uppercase text-sm tracking-widest transition-all ${activeCategory === cat.category
-                                        ? 'bg-accent text-white shadow-xl shadow-accent/20 translate-x-2'
-                                        : 'hover:bg-black/5 dark:hover:bg-white/5 text-muted-foreground'
+                                    ? 'bg-accent text-white shadow-xl shadow-accent/20 translate-x-2'
+                                    : 'hover:bg-black/5 dark:hover:bg-white/5 text-muted-foreground'
                                     }`}
                             >
                                 {cat.category}
@@ -94,8 +94,8 @@ export default function FAQPage() {
                             <div
                                 key={i}
                                 className={`rounded-3xl border transition-all duration-500 overflow-hidden ${openIndex === i
-                                        ? 'bg-white dark:bg-zinc-900 border-accent shadow-2xl'
-                                        : 'bg-black/5 dark:bg-white/5 border-transparent hover:border-black/10 dark:hover:border-white/10'
+                                    ? 'bg-white dark:bg-zinc-900 border-accent shadow-2xl'
+                                    : 'bg-black/5 dark:bg-white/5 border-transparent hover:border-black/10 dark:hover:border-white/10'
                                     }`}
                             >
                                 <button

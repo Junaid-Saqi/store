@@ -3,7 +3,7 @@ export default function TermsPage() {
     const terms = [
         {
             title: "Operating Principle",
-            content: "By using ElectroWave, you agree to our 10% advance payment model. All trending and premium tech requires a verified commitment via advance payment before priority dispatch."
+            content: "By using VOLT, you agree to our 10% advance payment model. All trending and premium tech requires a verified commitment via advance payment before priority dispatch."
         },
         {
             title: "Payment Obligations",
@@ -46,7 +46,7 @@ export default function TermsPage() {
                 </div>
 
                 <div className="text-center text-muted-foreground text-xs uppercase tracking-[0.2em] py-12">
-                    © 2026 ElectroWave Innovation Group. All Rights Reserved.
+                    © 2026 VOLT Innovation Group. All Rights Reserved.
                 </div>
             </div>
         </div>

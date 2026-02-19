@@ -40,7 +40,7 @@ export default function ContactPage() {
                             </div>
                             <div className="space-y-1">
                                 <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Email Us</p>
-                                <p className="font-bold text-lg">hello@electrowave.tech</p>
+                                <p className="font-bold text-lg">hello@volt.tech</p>
                             </div>
                         </div>
 
@@ -143,8 +143,8 @@ export default function ContactPage() {
                             disabled={isSending || sent}
                             type="submit"
                             className={`w-full py-6 rounded-2xl font-black text-xl flex items-center justify-center space-x-3 transition-all shadow-xl ${sent
-                                    ? 'bg-green-500 text-white shadow-green-500/20'
-                                    : 'bg-accent text-white shadow-accent/20 hover:scale-[1.02] active:scale-[0.98]'
+                                ? 'bg-green-500 text-white shadow-green-500/20'
+                                : 'bg-accent text-white shadow-accent/20 hover:scale-[1.02] active:scale-[0.98]'
                                 }`}
                         >
                             {isSending ? (

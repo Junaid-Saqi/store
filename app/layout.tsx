@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ElectroWave | Premium Electronics",
+  title: "VOLT | Premium Tech Stack",
   description: "Simple, addictive, and high-trust electronics store featuring our unique advance payment model.",
 };
 

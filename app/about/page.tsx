@@ -10,7 +10,7 @@ export default function AboutPage() {
                 <div className="absolute inset-0 z-0">
                     <Image
                         src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=2000"
-                        alt="About ElectroWave"
+                        alt="About VOLT"
                         fill
                         className="object-cover opacity-20"
                         priority
@@ -91,7 +91,7 @@ export default function AboutPage() {
                     <div className="relative aspect-square rounded-[4rem] overflow-hidden shadow-2xl">
                         <Image
                             src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1000"
-                            alt="ElectroWave Team"
+                            alt="VOLT Team"
                             fill
                             className="object-cover"
                         />

@@ -14,8 +14,8 @@ export default function Navbar() {
     return (
         <nav className="sticky top-0 z-50 w-full glass border-b border-white/10">
             <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-                <Link href="/" className="text-2xl font-bold tracking-tight text-accent">
-                    Electro<span className="text-foreground">Wave</span>
+                <Link href="/" className="text-2xl font-black tracking-tighter text-accent uppercase italic">
+                    VOLT<span className="text-foreground">.</span>
                 </Link>
 
                 {/* Desktop Nav */}

@@ -40,11 +40,11 @@ export default function Footer() {
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                     <div className="md:col-span-2 space-y-4">
-                        <Link href="/" className="text-2xl font-bold tracking-tight text-accent">
-                            Electro<span className="text-foreground">Wave</span>
+                        <Link href="/" className="text-2xl font-black tracking-tighter text-accent uppercase italic">
+                            VOLT<span className="text-foreground">.</span>
                         </Link>
                         <p className="text-muted-foreground text-sm max-w-sm">
-                            The ultimate destination for premium electronics. We redefine trust with our unique advance payment model and lightning-fast delivery.
+                            The ultimate destination for premium tech. We redefine commitment with our unique advance payment model and lightning-fast priority delivery.
                         </p>
                     </div>
                     <div>
@@ -66,7 +66,7 @@ export default function Footer() {
                 </div>
 
                 <div className="border-t border-black/5 dark:border-white/5 pt-8 text-center text-xs text-muted-foreground">
-                    <p>© {new Date().getFullYear()} ElectroWave. All rights reserved.</p>
+                    <p>© {new Date().getFullYear()} VOLT. All rights reserved.</p>
                 </div>
             </div>
         </footer>

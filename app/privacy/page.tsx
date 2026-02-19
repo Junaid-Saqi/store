@@ -48,7 +48,7 @@ export default function PrivacyPage() {
 
                 <div className="p-8 bg-accent/5 rounded-3xl border border-accent/10">
                     <p className="text-sm text-center text-muted-foreground">
-                        Last Updated: February 19, 2026. For any questions regarding this protocol, contact <span className="text-accent font-bold">privacy@electrowave.tech</span>.
+                        Last Updated: February 19, 2026. For any questions regarding this protocol, contact <span className="text-accent font-bold">privacy@volt.tech</span>.
                     </p>
                 </div>
             </div>
