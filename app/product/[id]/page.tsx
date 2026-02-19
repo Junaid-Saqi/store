@@ -6,9 +6,10 @@ import Image from "next/image";
 import { PRODUCTS } from "@/lib/mock-data";
 import { formatCurrency, calculateAdvance, cn } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
-import { ShoppingCart, ArrowLeft, Star, ShieldCheck, Truck, RefreshCw, Zap } from "lucide-react";
+import { ShoppingCart, ArrowLeft, ArrowRight, Star, ShieldCheck, Truck, RefreshCw, Zap } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import ProductCard from "@/components/product/ProductCard";
 
 export default function ProductDetailPage() {
     const { id } = useParams();
@@ -120,10 +121,52 @@ export default function ProductDetailPage() {
                             <span className="text-xs font-bold">7 Days Replacement</span>
                         </div>
                     </div>
+
+                    <div className="space-y-4 pt-4">
+                        <h3 className="text-xl font-black uppercase tracking-tight">Key Specifications</h3>
+                        <div className="space-y-2">
+                            {product.category === "Gaming Laptops" && (
+                                <>
+                                    <div className="flex justify-between text-sm border-b border-black/5 dark:border-white/5 pb-2">
+                                        <span className="text-muted-foreground font-bold uppercase tracking-widest text-[10px]">Graphics</span>
+                                        <span className="font-bold">NVIDIA RTX 4090</span>
+                                    </div>
+                                    <div className="flex justify-between text-sm border-b border-black/5 dark:border-white/5 pb-2">
+                                        <span className="text-muted-foreground font-bold uppercase tracking-widest text-[10px]">Memory</span>
+                                        <span className="font-bold">32GB DDR5</span>
+                                    </div>
+                                </>
+                            )}
+                            <div className="flex justify-between text-sm border-b border-black/5 dark:border-white/5 pb-2">
+                                <span className="text-muted-foreground font-bold uppercase tracking-widest text-[10px]">Warranty</span>
+                                <span className="font-bold">1 Year Global</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {/* Sticky Mobile Buy Button (Visual only here, implementation varies) */}
+            {/* Related Products */}
+            <div className="mt-32 space-y-12 mb-32">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-3xl font-black tracking-tighter uppercase italic">You might also <span className="text-accent">crave</span>.</h2>
+                    <Link href="/shop" className="text-accent font-black text-sm uppercase tracking-widest hover:underline flex items-center gap-2">
+                        View All <ArrowRight size={16} />
+                    </Link>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    {PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4).map((related) => (
+                        <ProductCard key={related.id} product={related} />
+                    ))}
+                    {PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).length === 0 &&
+                        PRODUCTS.filter(p => p.id !== product.id).slice(0, 4).map((related) => (
+                            <ProductCard key={related.id} product={related} />
+                        ))
+                    }
+                </div>
+            </div>
+
+            {/* Sticky Mobile Buy Button */}
             <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-lg border-t border-black/5 md:hidden z-40">
                 <button
                     onClick={() => addToCart(product)}
