@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Package, Truck, CheckCircle2, Clock, MapPin, ArrowRight } from "lucide-react";
+import { Search, Package, Truck, CheckCircle2, Clock, MapPin, ArrowRight, ShieldCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function TrackOrderPage() {

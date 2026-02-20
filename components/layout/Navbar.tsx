@@ -51,6 +51,9 @@ export default function Navbar() {
                         <Link href="/about" className="text-sm font-medium hover:text-accent transition-colors">
                             About
                         </Link>
+                        <Link href="/admin" className="text-sm font-black text-accent hover:opacity-80 transition-all uppercase tracking-tighter decoration-2 underline-offset-4 hover:underline">
+                            Admin
+                        </Link>
                     </div>
 
                     <div className="flex items-center space-x-4">
@@ -92,6 +95,7 @@ export default function Navbar() {
                                 <Link href="/shop" className="text-lg font-medium" onClick={() => setIsMenuOpen(false)}>Shop</Link>
                                 <Link href="/categories" className="text-lg font-medium" onClick={() => setIsMenuOpen(false)}>Categories</Link>
                                 <Link href="/about" className="text-lg font-medium" onClick={() => setIsMenuOpen(false)}>About</Link>
+                                <Link href="/admin" className="text-lg font-black text-accent mt-4" onClick={() => setIsMenuOpen(false)}>Admin Panel</Link>
                             </div>
                         </motion.div>
                     )}
