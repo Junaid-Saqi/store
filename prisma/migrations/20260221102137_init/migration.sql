@@ -1,16 +1,21 @@
 -- CreateTable
-CREATE TABLE "Product" (
+CREATE TABLE "Category" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "price" REAL NOT NULL,
-    "category" TEXT NOT NULL,
-    "image" TEXT NOT NULL,
-    "rating" REAL NOT NULL DEFAULT 0,
-    "reviews" INTEGER NOT NULL DEFAULT 0,
-    "isTrending" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "Product" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "purchasePrice" REAL,
+    "retailPrice" REAL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    "categoryId" TEXT NOT NULL,
+    CONSTRAINT "Product_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -30,7 +35,7 @@ CREATE TABLE "Order" (
 CREATE TABLE "OrderItem" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "orderId" TEXT NOT NULL,
-    "productId" TEXT NOT NULL,
+    "productId" INTEGER NOT NULL,
     "quantity" INTEGER NOT NULL DEFAULT 1,
     "price" REAL NOT NULL,
     CONSTRAINT "OrderItem_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
@@ -41,7 +46,7 @@ CREATE TABLE "OrderItem" (
 CREATE TABLE "CartItem" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "sessionId" TEXT NOT NULL,
-    "productId" TEXT NOT NULL,
+    "productId" INTEGER NOT NULL,
     "quantity" INTEGER NOT NULL DEFAULT 1,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,

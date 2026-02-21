@@ -45,7 +45,7 @@ export default function AdminDashboard() {
         },
         {
             label: "Total Products",
-            value: productCount.toString(),
+            value: String(productCount),
             change: "Stable",
             trend: "up",
             icon: Package,

@@ -10,15 +10,13 @@ import { Search, SlidersHorizontal, X, ArrowUpDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Product {
-    id: string;
+    id: number;
     name: string;
-    description: string;
-    price: number;
-    category: string;
-    image: string;
-    rating: number;
-    reviews: number;
-    isTrending?: boolean;
+    purchasePrice: number | null;
+    retailPrice: number | null;
+    category?: {
+        name: string;
+    };
 }
 
 function ShopContent() {
@@ -60,13 +58,10 @@ function ShopContent() {
         // Sorting logic
         switch (sortBy) {
             case "Price: Low to High":
-                result.sort((a, b) => a.price - b.price);
+                result.sort((a, b) => (a.retailPrice || a.purchasePrice || 0) - (b.retailPrice || b.purchasePrice || 0));
                 break;
             case "Price: High to Low":
-                result.sort((a, b) => b.price - a.price);
-                break;
-            case "Rating":
-                result.sort((a, b) => b.rating - a.rating);
+                result.sort((a, b) => (b.retailPrice || b.purchasePrice || 0) - (a.retailPrice || a.purchasePrice || 0));
                 break;
             default:
                 break;

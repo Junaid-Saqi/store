@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       where: {
         sessionId_productId: {
           sessionId,
-          productId,
+          productId: parseInt(productId),
         },
       },
     });
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
     const cartItem = await prisma.cartItem.create({
       data: {
         sessionId,
-        productId,
+        productId: parseInt(productId),
         quantity,
       },
       include: {
@@ -93,7 +93,7 @@ export async function PUT(request: Request) {
         where: {
           sessionId_productId: {
             sessionId,
-            productId,
+            productId: parseInt(productId),
           },
         },
       });
@@ -104,7 +104,7 @@ export async function PUT(request: Request) {
       where: {
         sessionId_productId: {
           sessionId,
-          productId,
+          productId: parseInt(productId),
         },
       },
       data: { quantity },
@@ -135,7 +135,7 @@ export async function DELETE(request: Request) {
         where: {
           sessionId_productId: {
             sessionId,
-            productId,
+            productId: parseInt(productId),
           },
         },
       });

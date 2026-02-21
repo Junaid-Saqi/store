@@ -1,74 +1,108 @@
 import { prisma } from "@/lib/prisma";
 
-const products = [
+const categoriesData = [
   {
-    name: "iPhone 15 Pro",
-    description: "The ultimate iPhone with Titanium design and A17 Pro chip.",
-    price: 999,
-    category: "Smartphones",
-    image: "https://images.unsplash.com/photo-1696446701796-da61225697cc?auto=format&fit=crop&q=80&w=800",
-    rating: 4.9,
-    reviews: 1240,
-    isTrending: true
+    id: "audio_devices",
+    name: "Audio Devices & Accessories",
+    products: [
+      { name: "Airbuds Covers", purchasePrice: null, retailPrice: null },
+      { name: "Airbuds with Covers", purchasePrice: 1000, retailPrice: null },
+      { name: "Airbuds Pack (China CS)", purchasePrice: 1000, retailPrice: null },
+      { name: "Xiberia W3 Airbuds", purchasePrice: null, retailPrice: null },
+      { name: "Airpods Pro 2", purchasePrice: 1000, retailPrice: null },
+      { name: "Samsung Galaxy Buds Pro", purchasePrice: 1400, retailPrice: null },
+      { name: "LAAT Handfrees", purchasePrice: null, retailPrice: null },
+      { name: "Boat HP11 Wireless Handfrees", purchasePrice: null, retailPrice: null },
+      { name: "Astro A10 Gaming Headset", purchasePrice: null, retailPrice: null }
+    ]
   },
   {
-    name: "MacBook Air M2",
-    description: "Strikingly thin and fast so you can work, play, or create anywhere.",
-    price: 1199,
-    category: "Laptops",
-    image: "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&q=80&w=800",
-    rating: 4.8,
-    reviews: 850,
-    isTrending: true
+    id: "microphones",
+    name: "Microphones & Recording",
+    products: [
+      { name: "LAVA Mic", purchasePrice: null, retailPrice: null },
+      { name: "BM-800 V-10 Podcast Mic", purchasePrice: null, retailPrice: null },
+      { name: "Podcast Mic Set", purchasePrice: 8500, retailPrice: null },
+      { name: "Wireless Mic + Recharger", purchasePrice: null, retailPrice: null }
+    ]
   },
   {
-    name: "Sony WH-1000XM5",
-    description: "Industry-leading noise canceling with exceptional sound quality.",
-    price: 399,
-    category: "Audio",
-    image: "https://images.unsplash.com/photo-1628202926206-c63a34b1618f?auto=format&fit=crop&q=80&w=800",
-    rating: 4.7,
-    reviews: 2100,
-    isTrending: true
+    id: "speakers",
+    name: "Speakers & Sound Systems",
+    products: [
+      { name: "Speakers", purchasePrice: null, retailPrice: null },
+      { name: "Loud Speaker (S11)", purchasePrice: null, retailPrice: null },
+      { name: "RGB Speaker", purchasePrice: null, retailPrice: null },
+      { name: "JBL Speakers", purchasePrice: null, retailPrice: null },
+      { name: "Boss Speakers", purchasePrice: null, retailPrice: null }
+    ]
   },
   {
-    name: "Apple Watch Series 9",
-    description: "Smarter, brighter, and more powerful than ever.",
-    price: 399,
-    category: "Wearables",
-    image: "https://images.unsplash.com/photo-1544117518-30dd5ff7a9bd?auto=format&fit=crop&q=80&w=800",
-    rating: 4.6,
-    reviews: 560,
-    isTrending: false
+    id: "power_banks",
+    name: "Power Banks & Charging",
+    products: [
+      { name: "Power Bank (20000 MAH)", purchasePrice: null, retailPrice: null },
+      { name: "Power Bank (10000 MAH)", purchasePrice: null, retailPrice: null },
+      { name: "Power Bank (12000 MAH)", purchasePrice: null, retailPrice: null },
+      { name: "Wireless Power Bank 2100", purchasePrice: null, retailPrice: null }
+    ]
   },
   {
-    name: "Samsung Galaxy S24 Ultra",
-    description: "The ultimate Galaxy AI experience with a stunning 200MP camera.",
-    price: 1299,
-    category: "Smartphones",
-    image: "https://images.unsplash.com/photo-1707251859187-b952f418d1a1?auto=format&fit=crop&q=80&w=800",
-    rating: 4.8,
-    reviews: 920,
-    isTrending: true
+    id: "mobile_holders_stands",
+    name: "Mobile Holders & Stands",
+    products: [
+      { name: "Car Phone Holder", purchasePrice: null, retailPrice: null },
+      { name: "Metal Mobile Stand", purchasePrice: null, retailPrice: null },
+      { name: "Mobile Magnetic Holder", purchasePrice: 800, retailPrice: null },
+      { name: "PF-4J Ring + Stand", purchasePrice: null, retailPrice: null },
+      { name: "Laptop Stand", purchasePrice: null, retailPrice: null },
+      { name: "Bulls Metal Bike Mobile Holder", purchasePrice: 1000, retailPrice: null }
+    ]
   },
   {
-    name: "Dell XPS 13",
-    description: "Powerful performance in a stunningly compact design.",
-    price: 999,
-    category: "Laptops",
-    image: "https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?auto=format&fit=crop&q=80&w=800",
-    rating: 4.5,
-    reviews: 430,
-    isTrending: false
+    id: "tripods",
+    name: "Tripods & Selfie Stands",
+    products: [
+      { name: "BX-385 Flex Tripod", purchasePrice: null, retailPrice: null },
+      { name: "BX-330 Flexible Tripod", purchasePrice: null, retailPrice: null },
+      { name: "BX-338 Flexible Tripod", purchasePrice: null, retailPrice: null },
+      { name: "BX-611 Flexible Tripod", purchasePrice: null, retailPrice: null },
+      { name: "BX-331 Flexible Tripod", purchasePrice: null, retailPrice: null },
+      { name: "310 Flexible Tripod", purchasePrice: null, retailPrice: null },
+      { name: "BX-611 Selfie Stick + Tripod", purchasePrice: null, retailPrice: null },
+      { name: "Tripod with Mobile Holder", purchasePrice: 1200, retailPrice: null },
+      { name: "7ft Aluminium Tripod Stand", purchasePrice: null, retailPrice: null }
+    ]
+  },
+  {
+    id: "lighting",
+    name: "Lighting Equipment",
+    products: [
+      { name: "Ring Light (3 Color Mode)", purchasePrice: null, retailPrice: null },
+      { name: "Night-Ball Lamp (Galaxy)", purchasePrice: 600, retailPrice: null }
+    ]
+  },
+  {
+    id: "networking",
+    name: "Networking Devices",
+    products: [
+      { name: "WPG10 Original Router", purchasePrice: null, retailPrice: null }
+    ]
+  },
+  {
+    id: "wearables",
+    name: "Wearable Technology",
+    products: [
+      { name: "Apple Watch Series 11", purchasePrice: 2600, retailPrice: null }
+    ]
+  },
+  {
+    id: "utility_gadgets",
+    name: "Utility Gadgets",
+    products: [
+      { name: "Portable Cigarette Lighter", purchasePrice: null, retailPrice: null }
+    ]
   }
-];
-
-const orders = [
-  { customer: "John Doe", email: "john@example.com", product: "iPhone 15 Pro", amount: 999.00, status: "Pending", method: "10% Advance" },
-  { customer: "Alice Smith", email: "alice@example.com", product: "MacBook Air M2", amount: 1199.00, status: "Shipped", method: "Full Payment" },
-  { customer: "Bob Wilson", email: "bob@example.com", product: "Sony WH-1000XM5", amount: 399.00, status: "Delivered", method: "10% Advance" },
-  { customer: "Emma Davis", email: "emma@example.com", product: "Apple Watch Series 9", amount: 399.00, status: "Cancelled", method: "Full Payment" },
-  { customer: "Chris Brown", email: "chris@example.com", product: "Samsung Galaxy S24 Ultra", amount: 1299.00, status: "Processing", method: "20% Advance" },
 ];
 
 async function main() {
@@ -79,40 +113,36 @@ async function main() {
   await prisma.order.deleteMany();
   await prisma.cartItem.deleteMany();
   await prisma.product.deleteMany();
+  await prisma.category.deleteMany();
 
-  // Create products
-  for (const product of products) {
-    await prisma.product.create({
-      data: product
+  // Create categories first
+  for (const category of categoriesData) {
+    await prisma.category.create({
+      data: {
+        id: category.id,
+        name: category.name
+      }
     });
   }
-  console.log(`Created ${products.length} products`);
 
-  // Create orders
-  const dbProducts = await prisma.product.findMany();
-  for (const order of orders) {
-    const product = dbProducts.find(p => p.name === order.product);
-    if (product) {
-      await prisma.order.create({
+  // Then create products for each category
+  for (const category of categoriesData) {
+    for (const product of category.products) {
+      await prisma.product.create({
         data: {
-          customer: order.customer,
-          email: order.email,
-          product: order.product,
-          amount: order.amount,
-          status: order.status,
-          method: order.method,
-          items: {
-            create: {
-              productId: product.id,
-              quantity: 1,
-              price: order.amount
-            }
-          }
+          name: product.name,
+          purchasePrice: product.purchasePrice,
+          retailPrice: product.retailPrice,
+          categoryId: category.id
         }
       });
     }
   }
-  console.log(`Created ${orders.length} orders`);
+
+  console.log(`Created ${categoriesData.length} categories`);
+  
+  const totalProducts = categoriesData.reduce((acc, cat) => acc + cat.products.length, 0);
+  console.log(`Created ${totalProducts} products`);
 
   console.log("Seeding completed!");
 }

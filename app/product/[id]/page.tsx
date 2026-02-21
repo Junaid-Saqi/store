@@ -1,22 +1,27 @@
 
-"use client";
-
-import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import { PRODUCTS } from "@/lib/mock-data";
-import { formatCurrency, calculateAdvance, cn } from "@/lib/utils";
-import { useCart } from "@/context/CartContext";
-import { ShoppingCart, ArrowLeft, ArrowRight, Star, ShieldCheck, Truck, RefreshCw, Zap } from "lucide-react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import ProductCard from "@/components/product/ProductCard";
+import { notFound } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { formatCurrency, calculateAdvance } from "@/lib/utils";
+import { ShoppingCart, ArrowLeft, Star, ShieldCheck, Truck, RefreshCw } from "lucide-react";
 
-export default function ProductDetailPage() {
-    const { id } = useParams();
-    const router = useRouter();
-    const { addToCart } = useCart();
+interface Props {
+    params: Promise<{ id: string }>;
+}
 
-    const product = PRODUCTS.find((p) => p.id === id);
+export default async function ProductDetailPage({ params }: Props) {
+    const { id } = await params;
+    const productId = parseInt(id);
+
+    if (isNaN(productId)) {
+        notFound();
+    }
+
+    const product = await prisma.product.findUnique({
+        where: { id: productId },
+        include: { category: true },
+    });
 
     if (!product) {
         return (
@@ -28,154 +33,110 @@ export default function ProductDetailPage() {
         );
     }
 
-    const advanceAmount = calculateAdvance(product.price);
-    const remainingAmount = product.price - advanceAmount;
+    const price = product.retailPrice || product.purchasePrice || 0;
+    const advanceAmount = calculateAdvance(price);
+    const remainingAmount = price - advanceAmount;
+
+    const relatedProducts = await prisma.product.findMany({
+        where: {
+            categoryId: product.categoryId,
+            id: { not: product.id },
+        },
+        take: 4,
+        include: { category: true },
+    });
 
     return (
         <div className="container mx-auto px-4 py-8 md:py-16">
-            <button
-                onClick={() => router.back()}
+            <Link
+                href="/shop"
                 className="flex items-center space-x-2 text-muted-foreground hover:text-foreground mb-8 transition-colors group"
             >
                 <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-                <span className="font-bold text-sm uppercase tracking-widest">Back</span>
-            </button>
+                <span className="font-bold">Back to Shop</span>
+            </Link>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
-                {/* Product Image */}
-                <div className="relative aspect-square rounded-[3rem] overflow-hidden shadow-premium bg-white dark:bg-zinc-900 border border-black/5 dark:border-white/10">
-                    <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        className="object-cover"
-                        priority
-                    />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div className="relative aspect-square bg-gradient-to-br from-accent/10 to-accent/5 rounded-3xl overflow-hidden">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-8xl">📦</span>
+                    </div>
                 </div>
 
-                {/* Product Info */}
-                <div className="flex flex-col space-y-8">
-                    <div className="space-y-4">
-                        <div className="flex items-center space-x-4">
-                            <span className="text-[10px] font-black uppercase tracking-widest bg-accent/10 text-accent px-3 py-1 rounded-full">
-                                {product.category}
-                            </span>
-                            <div className="flex items-center text-amber-500 space-x-1">
-                                <Star size={14} fill="currentColor" />
-                                <span className="text-sm font-bold">{product.rating} ({product.reviews} reviews)</span>
-                            </div>
-                        </div>
+                <div className="space-y-8">
+                    <div>
+                        <p className="text-xs font-bold uppercase tracking-widest text-accent mb-2">
+                            {product.category?.name}
+                        </p>
                         <h1 className="text-4xl md:text-5xl font-black tracking-tight">{product.name}</h1>
-                        <p className="text-xl text-muted-foreground leading-relaxed">{product.description}</p>
                     </div>
 
-                    <div className="p-8 bg-black/5 dark:bg-white/5 rounded-[2.5rem] space-y-6">
-                        <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground font-medium">Total Price</span>
-                            <span className="text-3xl font-black">{formatCurrency(product.price)}</span>
+                    <div className="flex items-baseline space-x-4">
+                        <span className="text-4xl font-extrabold">Rs. {price}</span>
+                        {product.retailPrice && product.purchasePrice && (
+                            <span className="text-xl text-muted-foreground line-through">
+                                Rs. {product.retailPrice}
+                            </span>
+                        )}
+                    </div>
+
+                    <div className="bg-accent/10 p-6 rounded-3xl space-y-4">
+                        <div className="flex justify-between items-center">
+                            <span className="text-muted-foreground">Advance Payment (10%)</span>
+                            <span className="font-bold text-xl">Rs. {advanceAmount}</span>
                         </div>
-
-                        <div className="h-px bg-black/10 dark:bg-white/10" />
-
-                        {/* Advance Calculation Box */}
-                        <div className="space-y-4">
-                            <div className="flex items-center justify-between text-accent">
-                                <div className="flex items-center space-x-2">
-                                    <Zap size={18} className="fill-current" />
-                                    <span className="font-bold">Pay Advance (10%)</span>
-                                </div>
-                                <span className="text-xl font-black">{formatCurrency(advanceAmount)}</span>
-                            </div>
-                            <div className="flex items-center justify-between text-sm text-muted-foreground">
-                                <span>Remaining on Delivery</span>
-                                <span>{formatCurrency(remainingAmount)}</span>
-                            </div>
-                        </div>
-
-                        <div className="bg-accent/10 p-4 rounded-2xl flex items-start space-x-3">
-                            <ShieldCheck size={18} className="text-accent shrink-0 mt-0.5" />
-                            <p className="text-[11px] text-accent leading-tight font-medium">
-                                Our advance payment model ensures your product is reserved and protects us from fake orders. Trust is mutual!
-                            </p>
+                        <div className="flex justify-between items-center">
+                            <span className="text-muted-foreground">Pay on Delivery</span>
+                            <span className="font-bold text-xl">Rs. {remainingAmount}</span>
                         </div>
                     </div>
 
-                    <div className="flex space-x-4 pt-4">
-                        <button
-                            onClick={() => addToCart(product)}
-                            className="flex-grow bg-black dark:bg-white text-white dark:text-black h-16 rounded-2xl font-black text-lg flex items-center justify-center space-x-3 hover:bg-accent dark:hover:bg-accent hover:text-white dark:hover:text-white transition-all active:scale-95 shadow-xl"
-                        >
-                            <ShoppingCart size={22} />
-                            <span>ADD TO CART</span>
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <button className="flex-1 bg-accent text-white py-4 rounded-2xl font-bold flex items-center justify-center space-x-2 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-accent/20">
+                            <ShoppingCart size={20} />
+                            <span>Add to Cart</span>
                         </button>
                     </div>
 
-                    {/* Quick Specs / Trust */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="flex items-center space-x-3 p-4 border border-black/5 dark:border-white/10 rounded-2xl">
-                            <Truck size={18} className="text-muted-foreground" />
-                            <span className="text-xs font-bold">Fast Shipping</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8 border-t border-black/5 dark:border-white/5">
+                        <div className="text-center space-y-2">
+                            <ShieldCheck className="mx-auto text-accent" size={24} />
+                            <p className="text-xs font-bold uppercase">Secure Payment</p>
                         </div>
-                        <div className="flex items-center space-x-3 p-4 border border-black/5 dark:border-white/10 rounded-2xl">
-                            <RefreshCw size={18} className="text-muted-foreground" />
-                            <span className="text-xs font-bold">7 Days Replacement</span>
+                        <div className="text-center space-y-2">
+                            <Truck className="mx-auto text-accent" size={24} />
+                            <p className="text-xs font-bold uppercase">Fast Delivery</p>
                         </div>
-                    </div>
-
-                    <div className="space-y-4 pt-4">
-                        <h3 className="text-xl font-black uppercase tracking-tight">Key Specifications</h3>
-                        <div className="space-y-2">
-                            {product.category === "Gaming Laptops" && (
-                                <>
-                                    <div className="flex justify-between text-sm border-b border-black/5 dark:border-white/5 pb-2">
-                                        <span className="text-muted-foreground font-bold uppercase tracking-widest text-[10px]">Graphics</span>
-                                        <span className="font-bold">NVIDIA RTX 4090</span>
-                                    </div>
-                                    <div className="flex justify-between text-sm border-b border-black/5 dark:border-white/5 pb-2">
-                                        <span className="text-muted-foreground font-bold uppercase tracking-widest text-[10px]">Memory</span>
-                                        <span className="font-bold">32GB DDR5</span>
-                                    </div>
-                                </>
-                            )}
-                            <div className="flex justify-between text-sm border-b border-black/5 dark:border-white/5 pb-2">
-                                <span className="text-muted-foreground font-bold uppercase tracking-widest text-[10px]">Warranty</span>
-                                <span className="font-bold">1 Year Global</span>
-                            </div>
+                        <div className="text-center space-y-2">
+                            <RefreshCw className="mx-auto text-accent" size={24} />
+                            <p className="text-xs font-bold uppercase">Easy Returns</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Related Products */}
-            <div className="mt-32 space-y-12 mb-32">
-                <div className="flex items-center justify-between">
-                    <h2 className="text-3xl font-black tracking-tighter uppercase italic">You might also <span className="text-accent">crave</span>.</h2>
-                    <Link href="/shop" className="text-accent font-black text-sm uppercase tracking-widest hover:underline flex items-center gap-2">
-                        View All <ArrowRight size={16} />
-                    </Link>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4).map((related) => (
-                        <ProductCard key={related.id} product={related} />
-                    ))}
-                    {PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).length === 0 &&
-                        PRODUCTS.filter(p => p.id !== product.id).slice(0, 4).map((related) => (
-                            <ProductCard key={related.id} product={related} />
-                        ))
-                    }
-                </div>
-            </div>
-
-            {/* Sticky Mobile Buy Button */}
-            <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-lg border-t border-black/5 md:hidden z-40">
-                <button
-                    onClick={() => addToCart(product)}
-                    className="w-full bg-accent text-white h-14 rounded-2xl font-black flex items-center justify-center space-x-3 shadow-lg shadow-accent/20"
-                >
-                    <ShoppingCart size={20} />
-                    <span>ADD TO CART - {formatCurrency(product.price)}</span>
-                </button>
-            </div>
+            {relatedProducts.length > 0 && (
+                <section className="mt-20">
+                    <h2 className="text-2xl font-black uppercase mb-8">Related Products</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {relatedProducts.map((related) => (
+                            <Link
+                                key={related.id}
+                                href={`/product/${related.id}`}
+                                className="block bg-white dark:bg-zinc-900 rounded-3xl p-6 border border-black/5 dark:border-white/5 hover:border-accent/50 transition-all"
+                            >
+                                <div className="aspect-square bg-gradient-to-br from-accent/10 to-accent/5 rounded-2xl mb-4 flex items-center justify-center">
+                                    <span className="text-4xl">📦</span>
+                                </div>
+                                <h3 className="font-bold mb-2 line-clamp-1">{related.name}</h3>
+                                <p className="text-accent font-extrabold">
+                                    Rs. {related.retailPrice || related.purchasePrice || 0}
+                                </p>
+                            </Link>
+                        ))}
+                    </div>
+                </section>
+            )}
         </div>
     );
 }

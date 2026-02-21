@@ -20,7 +20,7 @@ export default function AdminProducts() {
 
     const filteredProducts = products.filter(product =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchQuery.toLowerCase())
+        (product.category?.name || "").toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     if (isLoading) return (
@@ -85,25 +85,19 @@ export default function AdminProducts() {
                                 >
                                     <td className="px-6 py-4">
                                         <div className="flex items-center space-x-4">
-                                            <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-border bg-muted">
-                                                <Image
-                                                    src={product.image}
-                                                    alt={product.name}
-                                                    fill
-                                                    className="object-cover"
-                                                />
+                                            <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center text-2xl">
+                                                📦
                                             </div>
                                             <div>
                                                 <p className="font-bold text-sm">{product.name}</p>
-                                                <p className="text-xs text-muted-foreground truncate max-w-[200px]">{product.description}</p>
                                             </div>
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <span className="text-xs font-bold px-3 py-1 bg-muted rounded-full">{product.category}</span>
+                                        <span className="text-xs font-bold px-3 py-1 bg-muted rounded-full">{product.category?.name}</span>
                                     </td>
                                     <td className="px-6 py-4 font-bold text-sm">
-                                        ${product.price}
+                                        Rs. {product.retailPrice || product.purchasePrice || 0}
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className="text-[10px] font-black uppercase tracking-widest text-green-500 bg-green-500/10 px-2.5 py-1 rounded-full border border-green-500/20">

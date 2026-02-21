@@ -3,15 +3,13 @@
 import { useState, useEffect, useCallback } from "react";
 
 export interface Product {
-  id: string;
+  id: number;
   name: string;
-  description: string;
-  price: number;
-  category: string;
-  image: string;
-  rating: number;
-  reviews: number;
-  isTrending?: boolean;
+  purchasePrice: number | null;
+  retailPrice: number | null;
+  category?: {
+    name: string;
+  };
 }
 
 export interface Order {
@@ -90,7 +88,7 @@ export function useAdminStore() {
     }
   };
 
-  const deleteProduct = async (id: string) => {
+  const deleteProduct = async (id: number) => {
     try {
       await fetch(`/api/products/${id}`, { method: "DELETE" });
       setProducts((prev) => prev.filter((p) => p.id !== id));
@@ -100,7 +98,7 @@ export function useAdminStore() {
     }
   };
 
-  const updateProduct = async (id: string, updates: Partial<Product>) => {
+  const updateProduct = async (id: number, updates: Partial<Product>) => {
     try {
       const res = await fetch(`/api/products/${id}`, {
         method: "PUT",

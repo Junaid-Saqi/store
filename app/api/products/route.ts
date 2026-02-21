@@ -5,30 +5,27 @@ import { Prisma } from "@prisma/client";
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const category = searchParams.get("category");
+    const categoryId = searchParams.get("category");
     const search = searchParams.get("search");
-    const trending = searchParams.get("trending");
 
     const where: Prisma.ProductWhereInput = {};
 
-    if (category && category !== "All") {
-      where.category = category;
+    if (categoryId && categoryId !== "All") {
+      where.categoryId = categoryId;
     }
 
     if (search) {
       where.OR = [
         { name: { contains: search } },
-        { description: { contains: search } },
       ];
-    }
-
-    if (trending === "true") {
-      where.isTrending = true;
     }
 
     const products = await prisma.product.findMany({
       where,
-      orderBy: { createdAt: "desc" },
+      include: {
+        category: true,
+      },
+      orderBy: { id: "asc" },
     });
 
     return NextResponse.json(products);
@@ -41,18 +38,18 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, description, price, category, image, isTrending } = body;
+    const { name, purchasePrice, retailPrice, categoryId } = body;
+
+    if (!categoryId) {
+      return NextResponse.json({ error: "categoryId is required" }, { status: 400 });
+    }
 
     const product = await prisma.product.create({
       data: {
         name,
-        description,
-        price: parseFloat(price),
-        category,
-        image,
-        isTrending: isTrending || false,
-        rating: 0,
-        reviews: 0,
+        purchasePrice: purchasePrice ? parseFloat(purchasePrice) : null,
+        retailPrice: retailPrice ? parseFloat(retailPrice) : null,
+        categoryId,
       },
     });
 
