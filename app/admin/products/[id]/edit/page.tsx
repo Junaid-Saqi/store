@@ -9,7 +9,6 @@ import Link from "next/link";
 import { useState, use } from "react";
 import { useAdminStore } from "@/lib/admin-store";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -21,23 +20,12 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     
     const isLoading = !product;
 
-    const [formData, setFormData] = useState(() => ({
+    const [formData, setFormData] = useState({
         name: product?.name ?? "",
         purchasePrice: product?.purchasePrice?.toString() ?? "",
         retailPrice: product?.retailPrice?.toString() ?? "",
         categoryId: ""
-    }));
-
-    useEffect(() => {
-        if (product) {
-            setFormData({
-                name: product.name,
-                purchasePrice: product.purchasePrice?.toString() ?? "",
-                retailPrice: product.retailPrice?.toString() ?? "",
-                categoryId: ""
-            });
-        }
-    }, [product]);
+    });
 
     const handleSave = async () => {
         if (!formData.name) {
