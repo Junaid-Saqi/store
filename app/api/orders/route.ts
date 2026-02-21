@@ -47,13 +47,13 @@ export async function POST(request: Request) {
         customer,
         email,
         product,
-        amount: parseFloat(amount),
+        amount: parseFloat(String(amount)),
         method,
         status: "Pending",
         items: items
           ? {
-              create: items.map((item: { productId: string; quantity: number; price: number }) => ({
-                productId: item.productId,
+              create: items.map((item: { productId: number; quantity: number; price: number }) => ({
+                productId: Number(item.productId),
                 quantity: item.quantity,
                 price: parseFloat(String(item.price)),
               })),

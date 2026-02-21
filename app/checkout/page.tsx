@@ -4,28 +4,72 @@
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { formatCurrency, calculateAdvance, cn } from "@/lib/utils";
-import { ShieldCheck, ArrowRight, CheckCircle2, ChevronRight, Truck, CreditCard } from "lucide-react";
+import { ShieldCheck, ArrowRight, CheckCircle2, ChevronRight, Truck, CreditCard, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function CheckoutPage() {
-    const { cartTotal, clearCart } = useCart();
-    const [step, setStep] = useState(1); // 1: Shipping, 2: Payment, 3: Success
+    const { cart, cartTotal, clearCart } = useCart();
+    const [step, setStep] = useState(1);
     const [isProcessing, setIsProcessing] = useState(false);
-    const [orderId] = useState(() => Math.floor(Math.random() * 90000) + 10000);
+    const [orderData, setOrderData] = useState({
+        name: "",
+        email: "",
+        address: "",
+        city: "",
+        phone: "",
+    });
+    const [orderId, setOrderId] = useState("");
 
     const totalAdvance = calculateAdvance(cartTotal);
 
-    const handleNext = () => {
-        if (step === 2) {
-            setIsProcessing(true);
-            setTimeout(() => {
-                setIsProcessing(false);
-                setStep(3);
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setOrderData({ ...orderData, [e.target.name]: e.target.value });
+    };
+
+    const handlePlaceOrder = async () => {
+        if (!orderData.name || !orderData.email || !orderData.phone) {
+            alert("Please fill in all required fields");
+            return;
+        }
+
+        setIsProcessing(true);
+
+        try {
+            const items = cart.map(item => ({
+                productId: item.id,
+                quantity: item.quantity,
+                price: item.retailPrice || item.purchasePrice || 0,
+            }));
+
+            const res = await fetch("/api/orders", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    customer: orderData.name,
+                    email: orderData.email,
+                    product: cart.map(item => item.name).join(", "),
+                    amount: cartTotal,
+                    method: "10% Advance",
+                    items,
+                }),
+            });
+
+            const data = await res.json();
+            
+            if (res.ok) {
+                const newOrderId = data.id.slice(-6).toUpperCase();
+                setOrderId(newOrderId);
                 clearCart();
-            }, 2000);
-        } else {
-            setStep(step + 1);
+                setStep(3);
+            } else {
+                alert("Failed to place order. Please try again.");
+            }
+        } catch (error) {
+            console.error("Order error:", error);
+            alert("Failed to place order. Please try again.");
+        } finally {
+            setIsProcessing(false);
         }
     };
 
@@ -38,7 +82,7 @@ export default function CheckoutPage() {
                 <div className="space-y-4">
                     <h1 className="text-4xl font-black">ORDER PLACED!</h1>
                     <p className="text-muted-foreground max-w-sm">
-                        Thank you for your trust. Your advance of <span className="text-accent font-bold">{formatCurrency(totalAdvance)}</span> has been confirmed.
+                        Thank you for your trust. Your advance of <span className="text-accent font-bold">Rs. {totalAdvance}</span> has been confirmed.
                     </p>
                 </div>
                 <div className="bg-black/5 dark:bg-white/5 p-6 rounded-[2rem] max-w-xs w-full text-sm space-y-2">
@@ -63,7 +107,6 @@ export default function CheckoutPage() {
 
     return (
         <div className="container mx-auto px-4 py-12">
-            {/* Stepper */}
             <div className="flex items-center justify-center space-x-4 mb-16">
                 <div className={cn("flex items-center space-x-2", step >= 1 ? "text-accent" : "text-muted-foreground")}>
                     <div className={cn("w-8 h-8 rounded-full flex items-center justify-center font-bold border-2", step >= 1 ? "border-accent bg-accent/10" : "border-muted-foreground")}>1</div>
@@ -77,7 +120,6 @@ export default function CheckoutPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
-                {/* Form Area */}
                 <div className="lg:col-span-2">
                     <AnimatePresence mode="wait">
                         {step === 1 ? (
@@ -94,13 +136,61 @@ export default function CheckoutPage() {
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <Input label="Full Name" placeholder="John Doe" />
-                                    <Input label="Email Address" placeholder="john@example.com" />
-                                    <div className="sm:col-span-2">
-                                        <Input label="Address" placeholder="123 Future Street" />
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Full Name *</label>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            value={orderData.name}
+                                            onChange={handleInputChange}
+                                            placeholder="John Doe"
+                                            className="w-full px-5 py-3 tracking-wide bg-black/5 dark:bg-white/5 border border-transparent rounded-2xl focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all"
+                                        />
                                     </div>
-                                    <Input label="City" placeholder="Techville" />
-                                    <Input label="Phone Number" placeholder="+1 (555) 000-0000" />
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Email Address *</label>
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            value={orderData.email}
+                                            onChange={handleInputChange}
+                                            placeholder="john@example.com"
+                                            className="w-full px-5 py-3 tracking-wide bg-black/5 dark:bg-white/5 border border-transparent rounded-2xl focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all"
+                                        />
+                                    </div>
+                                    <div className="sm:col-span-2 space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Address</label>
+                                        <input
+                                            type="text"
+                                            name="address"
+                                            value={orderData.address}
+                                            onChange={handleInputChange}
+                                            placeholder="123 Future Street"
+                                            className="w-full px-5 py-3 tracking-wide bg-black/5 dark:bg-white/5 border border-transparent rounded-2xl focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">City</label>
+                                        <input
+                                            type="text"
+                                            name="city"
+                                            value={orderData.city}
+                                            onChange={handleInputChange}
+                                            placeholder="Techville"
+                                            className="w-full px-5 py-3 tracking-wide bg-black/5 dark:bg-white/5 border border-transparent rounded-2xl focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Phone Number *</label>
+                                        <input
+                                            type="tel"
+                                            name="phone"
+                                            value={orderData.phone}
+                                            onChange={handleInputChange}
+                                            placeholder="+1 (555) 000-0000"
+                                            className="w-full px-5 py-3 tracking-wide bg-black/5 dark:bg-white/5 border border-transparent rounded-2xl focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all"
+                                        />
+                                    </div>
                                 </div>
 
                                 <div className="p-6 bg-accent/5 rounded-3xl flex items-center space-x-4">
@@ -124,14 +214,14 @@ export default function CheckoutPage() {
                                     <p className="text-muted-foreground">Secure your order by paying 10% now.</p>
                                 </div>
 
-                                <div className="bg-black/5 dark:bg-white/5 p-8 rounded-[3rem] border-2 border-accent/20">
+                                <div className="bg-black/5 dark:bg-white/5 p-8 rounded-[3rem]">
                                     <div className="flex flex-col items-center justify-center text-center space-y-4 mb-8">
                                         <div className="p-4 bg-accent text-white rounded-3xl shadow-xl shadow-accent/20">
                                             <CreditCard size={32} />
                                         </div>
                                         <div>
                                             <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Amount to pay now</p>
-                                            <p className="text-5xl font-black text-accent">{formatCurrency(totalAdvance)}</p>
+                                            <p className="text-5xl font-black text-accent">Rs. {totalAdvance}</p>
                                         </div>
                                     </div>
 
@@ -161,35 +251,34 @@ export default function CheckoutPage() {
                     </AnimatePresence>
                 </div>
 
-                {/* Sidebar Summary */}
-                <div className="bg-white dark:bg-zinc-900 border border-black/5 dark:border-white/10 p-8 rounded-[3rem] shadow-premium h-fit space-y-8">
+                <div className="bg-white dark:bg-zinc-900 p-8 rounded-[3rem] shadow-premium h-fit space-y-8">
                     <h3 className="font-bold text-xl">ORDER SUMMARY</h3>
                     <div className="space-y-4">
                         <div className="flex justify-between text-sm">
                             <span className="text-muted-foreground">Total Value</span>
-                            <span className="font-bold">{formatCurrency(cartTotal)}</span>
+                            <span className="font-bold">Rs. {cartTotal}</span>
                         </div>
                         <div className="flex justify-between text-sm text-accent">
                             <span className="font-bold underline">To Pay Now (10%)</span>
-                            <span className="font-bold">{formatCurrency(totalAdvance)}</span>
+                            <span className="font-bold">Rs. {totalAdvance}</span>
                         </div>
                         <div className="h-px bg-black/5 dark:bg-white/5" />
                         <div className="flex justify-between text-sm">
                             <span className="text-muted-foreground">On Delivery</span>
-                            <span className="font-bold">{formatCurrency(cartTotal - totalAdvance)}</span>
+                            <span className="font-bold">Rs. {cartTotal - totalAdvance}</span>
                         </div>
                     </div>
 
                     <button
-                        onClick={handleNext}
+                        onClick={step === 1 ? () => setStep(2) : handlePlaceOrder}
                         disabled={isProcessing}
                         className="w-full bg-black dark:bg-white text-white dark:text-black h-16 rounded-2xl font-black text-lg flex items-center justify-center space-x-2 hover:bg-accent dark:hover:bg-accent hover:text-white dark:hover:text-white transition-all active:scale-95 disabled:opacity-50"
                     >
                         {isProcessing ? (
-                            <div className="h-6 w-6 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                            <Loader2 className="animate-spin" />
                         ) : (
                             <>
-                                <span>{step === 1 ? "CONTINUE" : `PAY ${formatCurrency(totalAdvance)}`}</span>
+                                <span>{step === 1 ? "CONTINUE" : `PAY Rs. ${totalAdvance}`}</span>
                                 <ArrowRight size={22} />
                             </>
                         )}
@@ -199,18 +288,3 @@ export default function CheckoutPage() {
         </div>
     );
 }
-
-function Input({ label, placeholder }: { label: string; placeholder: string }) {
-    return (
-        <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">{label}</label>
-            <input
-                type="text"
-                placeholder={placeholder}
-                className="w-full px-5 py-3 tracking-wide bg-black/5 dark:bg-white/5 border border-transparent rounded-2xl focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all"
-            />
-        </div>
-    );
-}
-
-
