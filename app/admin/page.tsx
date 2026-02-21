@@ -15,8 +15,46 @@ import Link from "next/link";
 
 import { motion } from "framer-motion";
 
+function generateSalesData(orders: { date: string; amount: number; status: string }[]) {
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const dayTotals = days.map(() => 0);
+    
+    orders.forEach(order => {
+        const orderDate = new Date(order.date);
+        const dayIndex = (orderDate.getDay() + 6) % 7;
+        if (order.status !== 'Cancelled') {
+            dayTotals[dayIndex] += order.amount;
+        }
+    });
+
+    const maxSale = Math.max(...dayTotals, 1);
+    const normalizedData = dayTotals.map(val => 300 - (val / maxSale) * 250);
+
+    const points = normalizedData.map((y, i) => ({
+        x: (i / 6) * 1000,
+        y
+    }));
+
+    const areaPath = `M 0 300 L ${points.map(p => `${p.x} ${p.y}`).join(' L ')} L 1000 300 Z`;
+    const linePath = `M ${points.map(p => `${p.x} ${p.y}`).join(' Q ' + ((points[0].x + points[1].x) / 2) + ' ' + ((points[0].y + points[1].y) / 2) + ' ')}`;
+
+    const smoothLine = points.reduce((acc, point, i) => {
+        if (i === 0) return `M ${point.x} ${point.y}`;
+        const prev = points[i - 1];
+        const cp1x = prev.x + (point.x - prev.x) / 2;
+        const cp1y = prev.y;
+        const cp2x = prev.x + (point.x - prev.x) / 2;
+        const cp2y = point.y;
+        return `${acc} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${point.x} ${point.y}`;
+    }, '');
+
+    return { areaPath, smoothLine, dayTotals, days };
+}
+
 export default function AdminDashboard() {
     const { orders, products, totalSales, orderCount, productCount } = useAdminStore();
+
+    const { areaPath, smoothLine, dayTotals, days } = generateSalesData(orders);
 
     const STATS = [
         {
@@ -123,7 +161,7 @@ export default function AdminDashboard() {
                                 initial={{ pathLength: 0, opacity: 0 }}
                                 animate={{ pathLength: 1, opacity: 0.1 }}
                                 transition={{ duration: 1.5, ease: "easeInOut" }}
-                                d="M 0 300 L 0 250 Q 125 240 250 180 Q 375 120 500 150 Q 625 180 750 100 Q 875 20 1000 50 L 1000 300 Z"
+                                d={areaPath}
                                 fill="url(#gradient)"
                             />
 
@@ -132,7 +170,7 @@ export default function AdminDashboard() {
                                 initial={{ pathLength: 0 }}
                                 animate={{ pathLength: 1 }}
                                 transition={{ duration: 1.5, ease: "easeInOut" }}
-                                d="M 0 250 Q 125 240 250 180 Q 375 120 500 150 Q 625 180 750 100 Q 875 20 1000 50"
+                                d={smoothLine}
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="4"
@@ -149,13 +187,12 @@ export default function AdminDashboard() {
                         </svg>
 
                         <div className="flex justify-between mt-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-2">
-                            <span>Mon</span>
-                            <span>Tue</span>
-                            <span>Wed</span>
-                            <span>Thu</span>
-                            <span>Fri</span>
-                            <span>Sat</span>
-                            <span>Sun</span>
+                            {days.map((day, i) => (
+                                <div key={day} className="flex flex-col items-center">
+                                    <span>{day}</span>
+                                    <span className="text-[8px] text-accent">${dayTotals[i].toLocaleString()}</span>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </motion.div>
