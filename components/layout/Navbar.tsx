@@ -13,9 +13,14 @@ export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [mounted, setMounted] = useState(false);
     const { cartCount } = useCart();
     const router = useRouter();
     const searchInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         if (isSearchOpen && searchInputRef.current) {
@@ -66,7 +71,7 @@ export default function Navbar() {
 
                         <Link href="/cart" className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors relative">
                             <ShoppingCart size={20} />
-                            {cartCount > 0 && (
+                            {mounted && cartCount > 0 && (
                                 <span className="absolute -top-1 -right-1 bg-accent text-white text-[10px] font-bold h-4 w-4 flex items-center justify-center rounded-full">
                                     {cartCount}
                                 </span>

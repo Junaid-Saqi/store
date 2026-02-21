@@ -75,6 +75,7 @@ export function useAdminStore() {
       });
 
       const data = await res.json();
+      console.log("Login response:", res.status, data);
 
       if (!res.ok) {
         return false;

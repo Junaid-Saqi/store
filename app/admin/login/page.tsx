@@ -19,7 +19,11 @@ export default function AdminLoginPage() {
         setError("");
         setIsLoading(true);
 
+        console.log("Attempting login with:", email);
+        
         const success = await login(email, password);
+        console.log("Login result:", success);
+        
         if (success) {
             router.push("/admin");
         } else {
