@@ -42,15 +42,15 @@ export default function AdminOrders() {
                     <h1 className="text-4xl font-black tracking-tight uppercase">Orders</h1>
                     <p className="text-muted-foreground">Monitor and manage customer transactions.</p>
                 </div>
-                <button className="bg-muted hover:bg-muted/80 text-foreground px-6 py-3 rounded-2xl font-bold flex items-center justify-center space-x-2 transition-all border border-border">
+                <button className="bg-muted hover:bg-muted/80 text-foreground px-6 py-3 rounded-2xl font-bold flex items-center justify-center space-x-2 transition-all">
                     <Download size={20} />
                     <span>Export CSV</span>
                 </button>
             </div>
 
-            <div className="bg-card border border-border rounded-[2.5rem] overflow-hidden shadow-sm">
-                <div className="p-6 border-b border-border bg-muted/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div className="flex items-center bg-background rounded-2xl border border-border px-4 py-2 w-full max-w-md">
+            <div className="bg-card rounded-[2.5rem] overflow-hidden shadow-sm">
+                <div className="p-6 bg-muted/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="flex items-center bg-background rounded-2xl px-4 py-2 w-full max-w-md">
                         <Search size={18} className="text-muted-foreground mr-2" />
                         <input
                             type="text"
@@ -61,11 +61,11 @@ export default function AdminOrders() {
                         />
                     </div>
                     <div className="flex items-center space-x-2">
-                        <button className="flex items-center space-x-2 px-4 py-2 bg-background border border-border rounded-xl text-sm font-bold hover:bg-muted/50 transition-colors">
+                        <button className="flex items-center space-x-2 px-4 py-2 bg-background rounded-xl text-sm font-bold hover:bg-muted/50 transition-colors">
                             <Filter size={16} />
                             <span>Status</span>
                         </button>
-                        <button className="flex items-center space-x-2 px-4 py-2 bg-background border border-border rounded-xl text-sm font-bold hover:bg-muted/50 transition-colors">
+                        <button className="flex items-center space-x-2 px-4 py-2 bg-background rounded-xl text-sm font-bold hover:bg-muted/50 transition-colors">
                             <Clock size={16} />
                             <span>Last 30 Days</span>
                         </button>
@@ -75,7 +75,7 @@ export default function AdminOrders() {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead>
-                            <tr className="border-b border-border bg-muted/10">
+                            <tr className="border-b bg-muted/10">
                                 <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-muted-foreground">Order ID</th>
                                 <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-muted-foreground">Customer</th>
                                 <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-muted-foreground">Product</th>

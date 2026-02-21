@@ -85,7 +85,7 @@ export default function NewProductPage() {
                 </button>
             </div>
 
-            <div className="bg-white dark:bg-zinc-900 rounded-3xl border border-black/5 dark:border-white/5 p-8 space-y-8">
+            <div className="bg-white dark:bg-zinc-900 rounded-3xl border p-8 space-y-8">
                 <div className="space-y-4">
                     <label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Product Name</label>
                     <input

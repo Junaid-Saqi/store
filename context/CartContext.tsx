@@ -1,9 +1,17 @@
-
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Product } from "@/lib/mock-data";
 import { useToast } from "@/context/ToastContext";
+
+interface Product {
+    id: number;
+    name: string;
+    purchasePrice: number | null;
+    retailPrice: number | null;
+    category?: {
+        name: string;
+    };
+}
 
 interface CartItem extends Product {
     quantity: number;
@@ -12,8 +20,8 @@ interface CartItem extends Product {
 interface CartContextType {
     cart: CartItem[];
     addToCart: (product: Product) => void;
-    removeFromCart: (productId: string) => void;
-    updateQuantity: (productId: string, quantity: number) => void;
+    removeFromCart: (productId: number) => void;
+    updateQuantity: (productId: number, quantity: number) => void;
     clearCart: () => void;
     cartTotal: number;
     cartCount: number;
@@ -36,12 +44,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     });
     const { showToast } = useToast();
 
-    // Save cart to localStorage on change
     useEffect(() => {
         localStorage.setItem("volt-cart", JSON.stringify(cart));
     }, [cart]);
 
     const addToCart = (product: Product) => {
+        const price = product.retailPrice || product.purchasePrice || 0;
         setCart((prev) => {
             const existing = prev.find((item) => item.id === product.id);
             if (existing) {
@@ -54,11 +62,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         showToast(`${product.name} added to your cart!`, "success");
     };
 
-    const removeFromCart = (productId: string) => {
+    const removeFromCart = (productId: number) => {
         setCart((prev) => prev.filter((item) => item.id !== productId));
     };
 
-    const updateQuantity = (productId: string, quantity: number) => {
+    const updateQuantity = (productId: number, quantity: number) => {
         if (quantity <= 0) {
             removeFromCart(productId);
             return;
@@ -70,7 +78,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     const clearCart = () => setCart([]);
 
-    const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    const cartTotal = cart.reduce((total, item) => {
+        const price = item.retailPrice || item.purchasePrice || 0;
+        return total + price * item.quantity;
+    }, 0);
     const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
 
     return (

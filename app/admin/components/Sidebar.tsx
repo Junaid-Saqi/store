@@ -39,8 +39,8 @@ export default function Sidebar() {
     };
 
     return (
-        <aside className="w-64 h-screen bg-card border-r border-border sticky top-0 flex flex-col">
-            <div className="p-6 border-b border-border flex items-center space-x-2">
+        <aside className="w-64 h-screen bg-card sticky top-0 flex flex-col">
+            <div className="p-6 flex items-center space-x-2">
                 <div className="bg-accent p-1.5 rounded-lg">
                     <Zap className="text-white fill-white" size={18} />
                 </div>
@@ -71,7 +71,7 @@ export default function Sidebar() {
                 })}
             </nav>
 
-            <div className="p-4 border-t border-border mt-auto">
+            <div className="p-4 mt-auto">
                 <button
                     onClick={handleLogout}
                     className="w-full flex items-center space-x-3 px-4 py-3 text-muted-foreground hover:text-destructive hover:bg-destructive/5 rounded-xl transition-all"

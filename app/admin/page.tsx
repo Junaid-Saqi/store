@@ -71,7 +71,7 @@ export default function AdminDashboard() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="bg-card border border-border rounded-[2rem] p-6 shadow-sm hover:shadow-md transition-shadow"
+                        className="bg-card rounded-[2rem] p-6 shadow-sm hover:shadow-md transition-shadow"
                     >
                         <div className="flex items-center justify-between mb-4">
                             <div className={`${stat.color} p-3 rounded-2xl`}>
@@ -95,7 +95,7 @@ export default function AdminDashboard() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.4 }}
-                    className="lg:col-span-2 bg-card border border-border rounded-[3rem] p-8 shadow-sm"
+                    className="lg:col-span-2 bg-card rounded-[3rem] p-8 shadow-sm"
                 >
                     <div className="flex items-center justify-between mb-8">
                         <h3 className="text-xl font-black uppercase">Sales Analytics</h3>
@@ -165,7 +165,7 @@ export default function AdminDashboard() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.5 }}
-                    className="bg-card border border-border rounded-[3rem] p-8 shadow-sm"
+                    className="bg-card rounded-[3rem] p-8 shadow-sm"
                 >
                     <h3 className="text-xl font-black mb-6 uppercase">Quick Actions</h3>
                     <div className="grid grid-cols-1 gap-4">
@@ -192,13 +192,13 @@ export default function AdminDashboard() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className="bg-card border border-border rounded-[3rem] p-8 shadow-sm"
+                className="bg-card rounded-[3rem] p-8 shadow-sm"
             >
                 <h3 className="text-xl font-black mb-6 uppercase">Recent Orders</h3>
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead>
-                            <tr className="border-b border-border">
+                            <tr className="border-b">
                                 <th className="pb-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">ID</th>
                                 <th className="pb-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Customer</th>
                                 <th className="pb-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Product</th>

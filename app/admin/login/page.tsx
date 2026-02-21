@@ -49,7 +49,7 @@ export default function AdminLoginPage() {
                     <p className="text-muted-foreground mt-2 font-medium">Please sign in to access the control center.</p>
                 </div>
 
-                <div className="bg-card border border-border rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
+                <div className="bg-card rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
                     {/* Glassmorphism Effect */}
                     <div className="absolute inset-0 bg-white/5 backdrop-blur-sm -z-10"></div>
 
@@ -63,7 +63,7 @@ export default function AdminLoginPage() {
                                     placeholder="admin@volt.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full bg-background border border-border rounded-2xl py-4 pl-12 pr-4 outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all font-medium"
+                                    className="w-full bg-background rounded-2xl py-4 pl-12 pr-4 outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all font-medium"
                                     required
                                 />
                             </div>
@@ -78,7 +78,7 @@ export default function AdminLoginPage() {
                                     placeholder="••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full bg-background border border-border rounded-2xl py-4 pl-12 pr-4 outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all font-medium"
+                                    className="w-full bg-background rounded-2xl py-4 pl-12 pr-4 outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all font-medium"
                                     required
                                 />
                             </div>
@@ -110,7 +110,7 @@ export default function AdminLoginPage() {
                         </button>
                     </form>
 
-                    <div className="mt-8 pt-6 border-t border-border/50 text-center">
+                    <div className="mt-8 pt-6/50 text-center">
                         <p className="text-xs text-muted-foreground">
                             Use <span className="font-bold text-foreground">admin@volt.com</span> / <span className="font-bold text-foreground">admin123</span> for access testing.
                         </p>

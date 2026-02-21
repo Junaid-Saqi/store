@@ -30,9 +30,9 @@ export default function AdminCustomers() {
                 </button>
             </div>
 
-            <div className="bg-card border border-border rounded-[2.5rem] overflow-hidden shadow-sm">
-                <div className="p-6 border-b border-border bg-muted/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div className="flex items-center bg-background rounded-2xl border border-border px-4 py-2 w-full max-w-md">
+            <div className="bg-card rounded-[2.5rem] overflow-hidden shadow-sm">
+                <div className="p-6 bg-muted/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="flex items-center bg-background rounded-2xl px-4 py-2 w-full max-w-md">
                         <Search size={18} className="text-muted-foreground mr-2" />
                         <input
                             type="text"
@@ -41,7 +41,7 @@ export default function AdminCustomers() {
                         />
                     </div>
                     <div className="flex items-center space-x-2">
-                        <button className="flex items-center space-x-2 px-4 py-2 bg-background border border-border rounded-xl text-sm font-bold hover:bg-muted/50 transition-colors">
+                        <button className="flex items-center space-x-2 px-4 py-2 bg-background rounded-xl text-sm font-bold hover:bg-muted/50 transition-colors">
                             <Filter size={16} />
                             <span>Segment</span>
                         </button>
@@ -51,7 +51,7 @@ export default function AdminCustomers() {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead>
-                            <tr className="border-b border-border bg-muted/10">
+                            <tr className="border-b bg-muted/10">
                                 <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-muted-foreground">Customer</th>
                                 <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-muted-foreground">Contact</th>
                                 <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-muted-foreground text-center">Orders</th>

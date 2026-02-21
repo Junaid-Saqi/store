@@ -19,7 +19,7 @@ export default function AdminSettings() {
 
             <div className="grid gap-8">
                 {/* General Settings */}
-                <div className="bg-card border border-border rounded-[2.5rem] p-8 shadow-sm space-y-6">
+                <div className="bg-card rounded-[2.5rem] p-8 shadow-sm space-y-6">
                     <div className="flex items-center space-x-3 text-accent">
                         <Globe size={24} />
                         <h3 className="text-xl font-bold">General Store Info</h3>
@@ -31,7 +31,7 @@ export default function AdminSettings() {
                             <input
                                 type="text"
                                 defaultValue="VOLT E-COMMERCE"
-                                className="w-full bg-background border border-border rounded-2xl px-5 py-3 outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all"
+                                className="w-full bg-background rounded-2xl px-5 py-3 outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all"
                             />
                         </div>
                         <div className="space-y-2">
@@ -39,14 +39,14 @@ export default function AdminSettings() {
                             <input
                                 type="email"
                                 defaultValue="support@volt.com"
-                                className="w-full bg-background border border-border rounded-2xl px-5 py-3 outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all"
+                                className="w-full bg-background rounded-2xl px-5 py-3 outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all"
                             />
                         </div>
                     </div>
                 </div>
 
                 {/* Security Settings */}
-                <div className="bg-card border border-border rounded-[2.5rem] p-8 shadow-sm space-y-6">
+                <div className="bg-card rounded-[2.5rem] p-8 shadow-sm space-y-6">
                     <div className="flex items-center space-x-3 text-accent">
                         <Shield size={24} />
                         <h3 className="text-xl font-bold">Security & Access</h3>
@@ -77,7 +77,7 @@ export default function AdminSettings() {
 
                 {/* Action Buttons */}
                 <div className="flex items-center justify-end space-x-4">
-                    <button className="px-8 py-3 rounded-2xl font-bold border border-border hover:bg-destructive/5 hover:text-destructive hover:border-destructive/20 transition-all flex items-center space-x-2">
+                    <button className="px-8 py-3 rounded-2xl font-bold hover:bg-destructive/5 hover:text-destructive hover:border-destructive/20 transition-all flex items-center space-x-2">
                         <Trash2 size={18} />
                         <span>Factory Reset</span>
                     </button>

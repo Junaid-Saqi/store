@@ -49,9 +49,9 @@ export default function AdminProducts() {
                 </Link>
             </div>
 
-            <div className="bg-card border border-border rounded-[2.5rem] overflow-hidden shadow-sm">
-                <div className="p-6 border-b border-border bg-muted/30">
-                    <div className="flex items-center bg-background rounded-2xl border border-border px-4 py-2 w-full max-w-md">
+            <div className="bg-card rounded-[2.5rem] overflow-hidden shadow-sm">
+                <div className="p-6 bg-muted/30">
+                    <div className="flex items-center bg-background rounded-2xl px-4 py-2 w-full max-w-md">
                         <Search size={18} className="text-muted-foreground mr-2" />
                         <input
                             type="text"
@@ -66,7 +66,7 @@ export default function AdminProducts() {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead>
-                            <tr className="border-b border-border bg-muted/10">
+                            <tr className="border-b bg-muted/10">
                                 <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-muted-foreground">Product</th>
                                 <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-muted-foreground">Category</th>
                                 <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-muted-foreground">Price</th>
