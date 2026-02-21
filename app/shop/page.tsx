@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo, useEffect, Suspense } from "react";
+import { useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { PRODUCTS, CATEGORIES } from "@/lib/mock-data";
 import ProductCard from "@/components/product/ProductCard";
@@ -18,15 +18,8 @@ function ShopContent() {
     const [sortBy, setSortBy] = useState("Recommended");
     const [showMobileFilters, setShowMobileFilters] = useState(false);
 
-    // Sync local state when global search changes
-    useEffect(() => {
-        if (globalSearch) {
-            setSearchQuery(globalSearch);
-        }
-    }, [globalSearch]);
-
     const filteredAndSortedProducts = useMemo(() => {
-        let result = PRODUCTS.filter((product) => {
+        const result = PRODUCTS.filter((product) => {
             const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
             const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
             return matchesCategory && matchesSearch;

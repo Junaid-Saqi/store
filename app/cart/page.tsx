@@ -18,7 +18,7 @@ export default function CartPage() {
                 </div>
                 <div className="space-y-2">
                     <h1 className="text-4xl font-black">YOUR CART IS EMPTY</h1>
-                    <p className="text-muted-foreground max-w-sm">Looks like you haven't added any premium tech yet. Let's fix that!</p>
+                    <p className="text-muted-foreground max-w-sm">Looks like you haven&apos;t added any premium tech yet. Let&apos;s fix that!</p>
                 </div>
                 <Link
                     href="/shop"

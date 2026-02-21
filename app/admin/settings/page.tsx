@@ -14,7 +14,7 @@ export default function AdminSettings() {
         <div className="max-w-4xl space-y-8">
             <div>
                 <h1 className="text-4xl font-black tracking-tight uppercase">Settings</h1>
-                <p className="text-muted-foreground">Configure your store's global preferences and security.</p>
+                <p className="text-muted-foreground">Configure your store&apos;s global preferences and security.</p>
             </div>
 
             <div className="grid gap-8">

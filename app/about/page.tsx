@@ -23,7 +23,7 @@ export default function AboutPage() {
                         WE ARE <br /><span className="text-accent underline decoration-4 underline-offset-8">ELECTROWAVE</span>
                     </h1>
                     <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto italic animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
-                        Redefining trust in the digital age. Bringing the world's finest innovation to your doorstep with total security.
+                        Redefining trust in the digital age. Bringing the world&apos;s finest innovation to your doorstep with total security.
                     </p>
                 </div>
             </section>

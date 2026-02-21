@@ -22,7 +22,7 @@ export default function ProductDetailPage() {
         return (
             <div className="container mx-auto px-4 py-32 text-center space-y-8">
                 <h1 className="text-4xl font-black">PRODUCT NOT FOUND</h1>
-                <p className="text-muted-foreground">The product you're looking for doesn't exist or has been removed.</p>
+                <p className="text-muted-foreground">The product you&apos;re looking for doesn&apos;t exist or has been removed.</p>
                 <Link href="/shop" className="text-accent font-black underline">Back to Shop</Link>
             </div>
         );

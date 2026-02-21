@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { PRODUCTS, Product } from "./mock-data";
 
 export interface Order {
@@ -23,36 +23,37 @@ const INITIAL_ORDERS: Order[] = [
 ];
 
 export function useAdminStore() {
-    const [products, setProducts] = useState<Product[]>([]);
-    const [orders, setOrders] = useState<Order[]>([]);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
+    const [products, setProducts] = useState<Product[]>(() => {
+        if (typeof window === "undefined") return PRODUCTS;
         const savedProducts = localStorage.getItem("volt_products");
-        const savedOrders = localStorage.getItem("volt_orders");
-        const savedAuth = localStorage.getItem("volt_admin_auth");
-
         if (savedProducts) {
-            setProducts(JSON.parse(savedProducts));
-        } else {
-            setProducts(PRODUCTS);
-            localStorage.setItem("volt_products", JSON.stringify(PRODUCTS));
+            try {
+                return JSON.parse(savedProducts);
+            } catch {
+                return PRODUCTS;
+            }
         }
-
+        localStorage.setItem("volt_products", JSON.stringify(PRODUCTS));
+        return PRODUCTS;
+    });
+    const [orders, setOrders] = useState<Order[]>(() => {
+        if (typeof window === "undefined") return INITIAL_ORDERS;
+        const savedOrders = localStorage.getItem("volt_orders");
         if (savedOrders) {
-            setOrders(JSON.parse(savedOrders));
-        } else {
-            setOrders(INITIAL_ORDERS);
-            localStorage.setItem("volt_orders", JSON.stringify(INITIAL_ORDERS));
+            try {
+                return JSON.parse(savedOrders);
+            } catch {
+                return INITIAL_ORDERS;
+            }
         }
-
-        if (savedAuth === "true") {
-            setIsAuthenticated(true);
-        }
-
-        setIsLoading(false);
-    }, []);
+        localStorage.setItem("volt_orders", JSON.stringify(INITIAL_ORDERS));
+        return INITIAL_ORDERS;
+    });
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+        if (typeof window === "undefined") return false;
+        return localStorage.getItem("volt_admin_auth") === "true";
+    });
+    const [isLoading] = useState(false);
 
     const login = (email: string, pass: string) => {
         if (email === "admin@volt.com" && pass === "admin123") {

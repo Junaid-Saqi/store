@@ -1,13 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Package, Truck, CheckCircle2, Clock, MapPin, ArrowRight, ShieldCheck } from "lucide-react";
+import { Package, Truck, CheckCircle2, Clock, MapPin, ArrowRight, ShieldCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+
+interface TrackingStep {
+    status: string;
+    date: string;
+    completed: boolean;
+}
+
+interface TrackingData {
+    id: string;
+    status: string;
+    lastUpdate: string;
+    location: string;
+    steps: TrackingStep[];
+}
 
 export default function TrackOrderPage() {
     const [orderId, setOrderId] = useState("");
     const [isSearching, setIsSearching] = useState(false);
-    const [trackingData, setTrackingData] = useState<any>(null);
+    const [trackingData, setTrackingData] = useState<TrackingData | null>(null);
 
     const handleTrack = (e: React.FormEvent) => {
         e.preventDefault();
@@ -97,7 +111,7 @@ export default function TrackOrderPage() {
                             </div>
 
                             <div className="space-y-8">
-                                {trackingData.steps.map((step: any, i: number) => (
+                                {trackingData.steps.map((step: TrackingStep, i: number) => (
                                     <div key={i} className="flex space-x-6 relative last:space-x-0">
                                         {i !== trackingData.steps.length - 1 && (
                                             <div className={`absolute left-4 top-10 bottom-0 w-0.5 ${step.completed ? 'bg-accent' : 'bg-black/10 dark:bg-white/10'}`} />

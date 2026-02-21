@@ -9,9 +9,10 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function CheckoutPage() {
-    const { cartTotal, cartCount, clearCart } = useCart();
+    const { cartTotal, clearCart } = useCart();
     const [step, setStep] = useState(1); // 1: Shipping, 2: Payment, 3: Success
     const [isProcessing, setIsProcessing] = useState(false);
+    const [orderId] = useState(() => Math.floor(Math.random() * 90000) + 10000);
 
     const totalAdvance = calculateAdvance(cartTotal);
 
@@ -43,7 +44,7 @@ export default function CheckoutPage() {
                 <div className="bg-black/5 dark:bg-white/5 p-6 rounded-[2rem] max-w-xs w-full text-sm space-y-2">
                     <div className="flex justify-between">
                         <span className="text-muted-foreground">Order ID</span>
-                        <span className="font-bold">#EW-{Math.floor(Math.random() * 90000) + 10000}</span>
+                        <span className="font-bold">#EW-{orderId}</span>
                     </div>
                     <div className="flex justify-between">
                         <span className="text-muted-foreground">Estimated Delivery</span>
@@ -152,7 +153,7 @@ export default function CheckoutPage() {
                                     <ShieldCheck className="text-accent shrink-0 mt-1" />
                                     <div className="text-sm">
                                         <p className="font-bold text-accent">Commitment Bridge</p>
-                                        <p className="text-muted-foreground italic">"We commit to delivery, you commit to acceptance."</p>
+                                        <p className="text-muted-foreground italic">&quot;We commit to delivery, you commit to acceptance.&quot;</p>
                                     </div>
                                 </div>
                             </motion.div>

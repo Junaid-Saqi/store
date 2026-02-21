@@ -52,7 +52,7 @@ export default function WhyAdvancePage() {
                         THE <span className="text-accent underline decoration-4 underline-offset-8">ADVANCE</span> <br />MODEL.
                     </h1>
                     <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto italic">
-                        Why we do it differently, and why it's better for you.
+                        Why we do it differently, and why it&apos;s better for you.
                     </p>
                 </div>
             </section>

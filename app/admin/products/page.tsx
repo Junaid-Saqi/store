@@ -38,7 +38,7 @@ export default function AdminProducts() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-4xl font-black tracking-tight uppercase">Products</h1>
-                    <p className="text-muted-foreground">Manage your store's inventory and listings.</p>
+                    <p className="text-muted-foreground">Manage your store&apos;s inventory and listings.</p>
                 </div>
                 <Link
                     href="/admin/products/new"

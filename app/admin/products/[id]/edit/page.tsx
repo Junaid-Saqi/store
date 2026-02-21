@@ -10,43 +10,27 @@ import {
     Loader2
 } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect, use } from "react";
+import { useState, use } from "react";
 import { useAdminStore } from "@/lib/admin-store";
 import { useRouter } from "next/navigation";
 
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
-    const { products, updateProduct, isLoading: storeLoading } = useAdminStore();
+    const { products, updateProduct } = useAdminStore();
     const router = useRouter();
     const [isSaving, setIsSaving] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    
+    const product = products.find(p => p.id === id);
+    
+    const isLoading = !product;
 
-    const [formData, setFormData] = useState({
-        name: "",
-        description: "",
-        price: "",
-        category: "smartphones",
-        image: ""
-    });
-
-    useEffect(() => {
-        if (!storeLoading) {
-            const product = products.find(p => p.id === id);
-            if (product) {
-                setFormData({
-                    name: product.name,
-                    description: product.description,
-                    price: product.price.toString(),
-                    category: product.category.toLowerCase(),
-                    image: product.image
-                });
-                setIsLoading(false);
-            } else {
-                // Product not found, redirect
-                router.push("/admin/products");
-            }
-        }
-    }, [id, products, storeLoading, router]);
+    const [formData, setFormData] = useState(() => ({
+        name: product?.name ?? "",
+        description: product?.description ?? "",
+        price: product?.price.toString() ?? "",
+        category: product?.category.toLowerCase() ?? "smartphones",
+        image: product?.image ?? ""
+    }));
 
     const handleSave = async () => {
         if (!formData.name || !formData.price) {
@@ -68,7 +52,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         }, 500);
     };
 
-    if (isLoading || storeLoading) {
+    if (isLoading) {
         return (
             <div className="flex h-[400px] items-center justify-center">
                 <Loader2 className="animate-spin text-accent" size={32} />

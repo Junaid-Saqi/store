@@ -1,10 +1,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Smartphone, Laptop, Headphones, Watch, LayoutGrid } from "lucide-react";
+import { ArrowRight, Smartphone, Laptop, Headphones, Watch, LayoutGrid, LucideIcon } from "lucide-react";
 import { CATEGORIES } from "@/lib/mock-data";
 
-const CATEGORY_ICONS: Record<string, any> = {
+const CATEGORY_ICONS: Record<string, LucideIcon> = {
     "Smartphones": Smartphone,
     "Laptops": Laptop,
     "Audio": Headphones,
@@ -32,7 +32,7 @@ export default function CategoriesPage() {
                     EXPLORE <span className="text-accent underline decoration-4 underline-offset-8">TECH</span> STACK
                 </h1>
                 <p className="text-xl text-muted-foreground">
-                    Curated collections of the world's most innovative hardware.
+                    Curated collections of the world&apos;s most innovative hardware.
                 </p>
             </div>
 
