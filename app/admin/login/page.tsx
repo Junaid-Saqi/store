@@ -19,10 +19,7 @@ export default function AdminLoginPage() {
         setError("");
         setIsLoading(true);
 
-        // Artificial delay for better UX
-        await new Promise(resolve => setTimeout(resolve, 800));
-
-        const success = login(email, password);
+        const success = await login(email, password);
         if (success) {
             router.push("/admin");
         } else {

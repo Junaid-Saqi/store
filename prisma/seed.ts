@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 
 const categoriesData = [
   {
-    id: "audio_devices",
+    id: "audio",
     name: "Audio Devices & Accessories",
     products: [
       { name: "Airbuds Covers", purchasePrice: null, retailPrice: null },
@@ -13,17 +13,11 @@ const categoriesData = [
       { name: "Samsung Galaxy Buds Pro", purchasePrice: 1400, retailPrice: null },
       { name: "LAAT Handfrees", purchasePrice: null, retailPrice: null },
       { name: "Boat HP11 Wireless Handfrees", purchasePrice: null, retailPrice: null },
-      { name: "Astro A10 Gaming Headset", purchasePrice: null, retailPrice: null }
-    ]
-  },
-  {
-    id: "microphones",
-    name: "Microphones & Recording",
-    products: [
       { name: "LAVA Mic", purchasePrice: null, retailPrice: null },
-      { name: "BM-800 V-10 Podcast Mic", purchasePrice: null, retailPrice: null },
+      { name: "BM-800 V-10 (Podcast Mic)", purchasePrice: null, retailPrice: null },
       { name: "Podcast Mic Set", purchasePrice: 8500, retailPrice: null },
-      { name: "Wireless Mic + Recharger", purchasePrice: null, retailPrice: null }
+      { name: "Wireless Mic + Recharger", purchasePrice: null, retailPrice: null },
+      { name: "Astro A10 Gaming Headset", purchasePrice: null, retailPrice: null }
     ]
   },
   {
@@ -38,8 +32,8 @@ const categoriesData = [
     ]
   },
   {
-    id: "power_banks",
-    name: "Power Banks & Charging",
+    id: "power",
+    name: "Power & Charging Devices",
     products: [
       { name: "Power Bank (20000 MAH)", purchasePrice: null, retailPrice: null },
       { name: "Power Bank (10000 MAH)", purchasePrice: null, retailPrice: null },
@@ -48,20 +42,20 @@ const categoriesData = [
     ]
   },
   {
-    id: "mobile_holders_stands",
-    name: "Mobile Holders & Stands",
+    id: "mobile_accessories",
+    name: "Mobile Accessories",
     products: [
       { name: "Car Phone Holder", purchasePrice: null, retailPrice: null },
       { name: "Metal Mobile Stand", purchasePrice: null, retailPrice: null },
       { name: "Mobile Magnetic Holder", purchasePrice: 800, retailPrice: null },
       { name: "PF-4J Ring + Stand", purchasePrice: null, retailPrice: null },
       { name: "Laptop Stand", purchasePrice: null, retailPrice: null },
-      { name: "Bulls Metal Bike Mobile Holder", purchasePrice: 1000, retailPrice: null }
+      { name: "Portable Cigarette Lighter", purchasePrice: null, retailPrice: null }
     ]
   },
   {
-    id: "tripods",
-    name: "Tripods & Selfie Stands",
+    id: "tripods_lighting",
+    name: "Tripods, Stands & Lighting",
     products: [
       { name: "BX-385 Flex Tripod", purchasePrice: null, retailPrice: null },
       { name: "BX-330 Flexible Tripod", purchasePrice: null, retailPrice: null },
@@ -71,15 +65,15 @@ const categoriesData = [
       { name: "310 Flexible Tripod", purchasePrice: null, retailPrice: null },
       { name: "BX-611 Selfie Stick + Tripod", purchasePrice: null, retailPrice: null },
       { name: "Tripod with Mobile Holder", purchasePrice: 1200, retailPrice: null },
-      { name: "7ft Aluminium Tripod Stand", purchasePrice: null, retailPrice: null }
+      { name: "7ft Aluminium Tripod Stand", purchasePrice: null, retailPrice: null },
+      { name: "Ring Light Dimmable (3 Color Mode)", purchasePrice: null, retailPrice: null }
     ]
   },
   {
-    id: "lighting",
-    name: "Lighting Equipment",
+    id: "bike_outdoor",
+    name: "Bike & Outdoor Accessories",
     products: [
-      { name: "Ring Light (3 Color Mode)", purchasePrice: null, retailPrice: null },
-      { name: "Night-Ball Lamp (Galaxy)", purchasePrice: 600, retailPrice: null }
+      { name: "Bulls Metal Bike Mobile Holder", purchasePrice: 1000, retailPrice: null }
     ]
   },
   {
@@ -90,17 +84,17 @@ const categoriesData = [
     ]
   },
   {
-    id: "wearables",
-    name: "Wearable Technology",
+    id: "decor",
+    name: "Decor & Utility Gadgets",
     products: [
-      { name: "Apple Watch Series 11", purchasePrice: 2600, retailPrice: null }
+      { name: "Night-Ball Lamp (Galaxy)", purchasePrice: 600, retailPrice: null }
     ]
   },
   {
-    id: "utility_gadgets",
-    name: "Utility Gadgets",
+    id: "wearables",
+    name: "Wearable Tech",
     products: [
-      { name: "Portable Cigarette Lighter", purchasePrice: null, retailPrice: null }
+      { name: "Apple Watch Series 11", purchasePrice: 2600, retailPrice: null }
     ]
   }
 ];
@@ -108,14 +102,12 @@ const categoriesData = [
 async function main() {
   console.log("Seeding database...");
 
-  // Clear existing data
   await prisma.orderItem.deleteMany();
   await prisma.order.deleteMany();
   await prisma.cartItem.deleteMany();
   await prisma.product.deleteMany();
   await prisma.category.deleteMany();
 
-  // Create categories first
   for (const category of categoriesData) {
     await prisma.category.create({
       data: {
@@ -125,7 +117,6 @@ async function main() {
     });
   }
 
-  // Then create products for each category
   for (const category of categoriesData) {
     for (const product of category.products) {
       await prisma.product.create({
@@ -140,10 +131,8 @@ async function main() {
   }
 
   console.log(`Created ${categoriesData.length} categories`);
-  
   const totalProducts = categoriesData.reduce((acc, cat) => acc + cat.products.length, 0);
   console.log(`Created ${totalProducts} products`);
-
   console.log("Seeding completed!");
 }
 

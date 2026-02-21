@@ -23,12 +23,20 @@ export interface Order {
   method: string;
 }
 
+export interface Admin {
+  id: string;
+  email: string;
+  name: string;
+}
+
 export function useAdminStore() {
   const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [admin, setAdmin] = useState<Admin | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     if (typeof window === "undefined") return false;
-    return localStorage.getItem("volt_admin_auth") === "true";
+    const savedAdmin = localStorage.getItem("volt_admin");
+    return !!savedAdmin;
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -58,18 +66,34 @@ export function useAdminStore() {
     });
   }, [fetchProducts, fetchOrders]);
 
-  const login = (email: string, pass: string) => {
-    if (email === "admin@volt.com" && pass === "admin123") {
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        return false;
+      }
+
       setIsAuthenticated(true);
-      localStorage.setItem("volt_admin_auth", "true");
+      setAdmin(data.admin);
+      localStorage.setItem("volt_admin", JSON.stringify(data.admin));
       return true;
+    } catch (error) {
+      console.error("Login failed:", error);
+      return false;
     }
-    return false;
   };
 
   const logout = () => {
     setIsAuthenticated(false);
-    localStorage.removeItem("volt_admin_auth");
+    setAdmin(null);
+    localStorage.removeItem("volt_admin");
   };
 
   const addProduct = async (product: Omit<Product, "id">) => {
@@ -137,6 +161,7 @@ export function useAdminStore() {
   return {
     products,
     orders,
+    admin,
     isAuthenticated,
     isLoading,
     login,

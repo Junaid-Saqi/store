@@ -3,7 +3,6 @@
 
 import { useState, useMemo, Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { CATEGORIES } from "@/lib/mock-data";
 import ProductCard from "@/components/product/ProductCard";
 import { cn } from "@/lib/utils";
 import { Search, SlidersHorizontal, X, ArrowUpDown } from "lucide-react";
@@ -19,16 +18,36 @@ interface Product {
     };
 }
 
+interface Category {
+    id: string;
+    name: string;
+}
+
 function ShopContent() {
     const searchParams = useSearchParams();
     const globalSearch = searchParams.get("q") || "";
 
     const [products, setProducts] = useState<Product[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [searchQuery, setSearchQuery] = useState(globalSearch);
     const [sortBy, setSortBy] = useState("Recommended");
     const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+    useEffect(() => {
+        Promise.all([
+            fetch("/api/categories").then(res => res.json()),
+            fetch("/api/products").then(res => res.json())
+        ]).then(([categoriesData, productsData]) => {
+            setCategories(categoriesData);
+            setProducts(productsData);
+            setLoading(false);
+        }).catch(err => {
+            console.error("Failed to fetch data:", err);
+            setLoading(false);
+        });
+    }, []);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -45,8 +64,6 @@ function ShopContent() {
                 setProducts(data);
             } catch (error) {
                 console.error("Failed to fetch products:", error);
-            } finally {
-                setLoading(false);
             }
         };
         fetchProducts();
@@ -120,18 +137,18 @@ function ShopContent() {
                     <div>
                         <h3 className="font-black uppercase tracking-[0.2em] text-[10px] text-muted-foreground mb-6 border-b border-black/5 dark:border-white/5 pb-2">Category Filter</h3>
                         <div className="flex flex-col gap-2">
-                            {CATEGORIES.map((category) => (
+                            {categories.map((cat) => (
                                 <button
-                                    key={category}
-                                    onClick={() => setSelectedCategory(category)}
+                                    key={cat.id}
+                                    onClick={() => setSelectedCategory(cat.id)}
                                     className={cn(
                                         "px-6 py-3 rounded-xl text-sm font-black uppercase tracking-widest transition-all text-left",
-                                        selectedCategory === category
+                                        selectedCategory === cat.id
                                             ? "bg-accent text-white shadow-xl shadow-accent/20 translate-x-1"
                                             : "hover:bg-black/5 dark:hover:bg-white/5 text-muted-foreground hover:translate-x-1"
                                     )}
                                 >
-                                    {category}
+                                    {cat.name}
                                 </button>
                             ))}
                         </div>
@@ -224,18 +241,18 @@ function ShopContent() {
                                 <section className="space-y-6">
                                     <h4 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground border-b border-black/5 dark:border-white/5 pb-2">Category</h4>
                                     <div className="grid grid-cols-1 gap-3">
-                                        {CATEGORIES.map((category) => (
+                                        {categories.map((cat) => (
                                             <button
-                                                key={category}
-                                                onClick={() => setSelectedCategory(category)}
+                                                key={cat.id}
+                                                onClick={() => setSelectedCategory(cat.id)}
                                                 className={cn(
                                                     "w-full text-left px-6 py-4 rounded-2xl font-bold transition-all",
-                                                    selectedCategory === category
+                                                    selectedCategory === cat.id
                                                         ? "bg-accent text-white shadow-lg shadow-accent/20"
                                                         : "bg-black/5 dark:bg-white/5 text-muted-foreground"
                                                 )}
                                             >
-                                                {category}
+                                                {cat.name}
                                             </button>
                                         ))}
                                     </div>
