@@ -1,15 +1,15 @@
 
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { PRODUCTS, CATEGORIES } from "@/lib/mock-data";
 import ProductCard from "@/components/product/ProductCard";
 import { cn } from "@/lib/utils";
-import { Search, SlidersHorizontal, X, ArrowUpDown, Star } from "lucide-react";
+import { Search, SlidersHorizontal, X, ArrowUpDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function ShopPage() {
+function ShopContent() {
     const searchParams = useSearchParams();
     const globalSearch = searchParams.get("q") || "";
 
@@ -227,5 +227,31 @@ export default function ShopPage() {
                 )}
             </AnimatePresence>
         </div>
+    );
+}
+
+function ShopPageLoading() {
+    return (
+        <div className="container mx-auto px-4 py-12 min-h-screen">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
+                <div className="space-y-4">
+                    <div className="h-16 w-64 bg-muted animate-pulse rounded" />
+                    <div className="h-6 w-80 bg-muted animate-pulse rounded" />
+                </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {[...Array(6)].map((_, i) => (
+                    <div key={i} className="h-80 bg-muted animate-pulse rounded-2xl" />
+                ))}
+            </div>
+        </div>
+    );
+}
+
+export default function ShopPage() {
+    return (
+        <Suspense fallback={<ShopPageLoading />}>
+            <ShopContent />
+        </Suspense>
     );
 }
