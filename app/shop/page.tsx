@@ -1,29 +1,61 @@
 
 "use client";
 
-import { useState, useMemo, Suspense } from "react";
+import { useState, useMemo, Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { PRODUCTS, CATEGORIES } from "@/lib/mock-data";
+import { CATEGORIES } from "@/lib/mock-data";
 import ProductCard from "@/components/product/ProductCard";
 import { cn } from "@/lib/utils";
 import { Search, SlidersHorizontal, X, ArrowUpDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+interface Product {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    category: string;
+    image: string;
+    rating: number;
+    reviews: number;
+    isTrending?: boolean;
+}
+
 function ShopContent() {
     const searchParams = useSearchParams();
     const globalSearch = searchParams.get("q") || "";
 
+    const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [searchQuery, setSearchQuery] = useState(globalSearch);
     const [sortBy, setSortBy] = useState("Recommended");
     const [showMobileFilters, setShowMobileFilters] = useState(false);
 
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const params = new URLSearchParams();
+                if (selectedCategory !== "All") {
+                    params.set("category", selectedCategory);
+                }
+                if (globalSearch) {
+                    params.set("search", globalSearch);
+                }
+                const res = await fetch(`/api/products?${params}`);
+                const data = await res.json();
+                setProducts(data);
+            } catch (error) {
+                console.error("Failed to fetch products:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchProducts();
+    }, [selectedCategory, globalSearch]);
+
     const filteredAndSortedProducts = useMemo(() => {
-        const result = PRODUCTS.filter((product) => {
-            const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
-            const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
-            return matchesCategory && matchesSearch;
-        });
+        const result = [...products];
 
         // Sorting logic
         switch (sortBy) {
@@ -41,7 +73,7 @@ function ShopContent() {
         }
 
         return result;
-    }, [selectedCategory, searchQuery, sortBy]);
+    }, [products, sortBy]);
 
     return (
         <div className="container mx-auto px-4 py-12 min-h-screen">
@@ -113,7 +145,13 @@ function ShopContent() {
 
                 {/* Product Grid */}
                 <div className="grow">
-                    {filteredAndSortedProducts.length > 0 ? (
+                    {loading ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
+                            {[...Array(6)].map((_, i) => (
+                                <div key={i} className="h-80 bg-muted animate-pulse rounded-2xl" />
+                            ))}
+                        </div>
+                    ) : filteredAndSortedProducts.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
                             {filteredAndSortedProducts.map((product) => (
                                 <ProductCard key={product.id} product={product} />
